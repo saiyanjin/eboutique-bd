@@ -26,13 +26,13 @@ Voici le récapitulatif du projet.
     * Ajout de nouveaux types d'articles (Gestion du stock non requise).
     * Création et gestion de nouvelles catégories.
 
-### 🛠️ En cours ou à améliorer (NOK)
+### En cours ou à améliorer (NOK)
 * **Inscription** : Le formulaire d'inscription a besoin de l'implémentation du contrôle de majorité basé sur la date de naissance.
 * **Profil Utilisateur** : La fonctionnalité de mise à jour des informations du profil pour le client connecté.
 
 ---
 
-## 🛠️ Stack Technique
+## Stack Technique
 
 * **Framework** : Symfony 7
 * **Langage** : PHP 8.2+
