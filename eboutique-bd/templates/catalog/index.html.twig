@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Catalogue de Bandes Dessinées{% endblock %}
+
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">Notre Catalogue</h1>
+
+
+    {# Barre de tri par catégorie #}
+
+    <div class="mb-4">
+
+        <div class="btn-group" role="group">
+
+            <a href="{{ path('app_home') }}" 
+
+               class="btn btn-outline-primary {{ currentCategory is empty ? 'active' : '' }}">
+
+               Tous les genres
+
+            </a>
+
+            
+
+            {% for category in categories %}
+
+                <a href="{{ path('app_home', { category: category.id }) }}" 
+
+                   class="btn btn-outline-primary {{ currentCategory == category.id ? 'active' : '' }}">
+
+                    {{ category.name }}
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        {% for product in products %}
+
+            {# ... Ton code de carte produit (inchangé) ... #}
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100">
+
+                    {% if product.media is not empty %}
+
+                        <img src="{{ asset('uploads/' ~ product.media[0].path) }}" class="card-img-top" alt="{{ product.media[0].alt }}">
+
+                    {% else %}
+
+                        <img src="https://via.placeholder.com/200x300?text=Pas+d'image" class="card-img-top" alt="Image par défaut">
+
+                    {% endif %}
+
+                    <div class="card-body">
+
+                         <h5 class="card-title">{{ product.name }}</h5>
+
+                         <span class="badge bg-info text-dark mb-2">{{ product.category.name }}</span>
+
+                    </div>
+
+<div class="card-footer">
+
+                        {# Lien vers l'ajout au panier #}
+
+                        <a href="{{ path('app_cart_add', {id: product.id}) }}" class="btn btn-success w-100">
+
+                            Ajouter au panier
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="col-12">
+
+                <p class="alert alert-info">Aucun produit trouvé dans cette catégorie.</p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

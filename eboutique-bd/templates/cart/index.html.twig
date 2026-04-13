@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+<h1>Votre Panier de BD</h1>
+
+{% if items | length > 0 %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix HT</th>
+                <th>Quantité</th>
+                <th>Total Ligne</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.priceHT }} €</td>
+                    <td>
+                        <a href="{{ path('app_cart_decrement', {id: item.product.id}) }}" class="btn btn-sm btn-secondary">-</a>
+                        {{ item.quantity }}
+                        <a href="{{ path('app_cart_add', {id: item.product.id}) }}" class="btn btn-sm btn-secondary">+</a>
+                    </td>
+                    <td>{{ item.product.priceHT * item.quantity }} €</td>
+                    <td>
+                        <a href="{{ path('app_cart_remove', {id: item.product.id}) }}" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                {# <td colspan="3" class="text-end"><strong>Total Général :</strong></td> #}
+                <td colspan="2"><strong>{{ total }} €</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div class="mt-4">
+        <a href="{{ path('app_order_validate') }}" class="btn btn-success">Passer la commande</a>
+    </div>
+{% else %}
+    <p>Votre panier est vide.</p>
+    <a href="{{ path('app_home') }}" class="btn btn-primary">Retourner à la boutique</a>
+{% endif %}
+{% endblock %}
