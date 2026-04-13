@@ -5,33 +5,75 @@
 {% block body %}
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                {% for flash_error in app.flashes('verify_email_error') %}
-                    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-                {% endfor %}
-
-                <h1 class="h3 mb-3 font-weight-normal">Créer un compte</h1>
-
-                {{ form_start(registrationForm) }}
-                    {# On affiche les champs dans l'ordre souhaité #}
-                    {{ form_row(registrationForm.firstName) }}
-                    {{ form_row(registrationForm.email) }}
-                    {{ form_row(registrationForm.phone) }}
-                    {{ form_row(registrationForm.dateOfBirth) }}
-                    
-                    {{ form_row(registrationForm.plainPassword, {
-                        label: 'Mot de passe'
-                    }) }}
-
-                    <div class="my-3">
-                        {{ form_row(registrationForm.agreeTerms, {
-                            label: 'Accepter les conditions générales'
-                        }) }}
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h1 class="h4 mb-0">Créer un compte</h1>
                     </div>
+                    
+                    <div class="card-body p-4">
+                        {% for flash_error in app.flashes('verify_email_error') %}
+                            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                        {% endfor %}
 
-                    {# Le bouton est bien placé après tous les champs, juste avant form_end #}
-                    <button type="submit" class="btn btn-lg btn-primary w-100 mt-3">S'inscrire</button>
-                {{ form_end(registrationForm) }}
+                        {{ form_start(registrationForm) }}
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {{ form_row(registrationForm.firstName, {
+                                        label: 'Prénom',
+                                        attr: { 'class': 'form-control', 'placeholder': 'Votre prénom' }
+                                    }) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.email, {
+                                    label: 'Adresse E-mail',
+                                    attr: { 'class': 'form-control', 'placeholder': 'exemple@mail.com' }
+                                }) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.phone, {
+                                    label: 'Téléphone',
+                                    attr: { 'class': 'form-control', 'placeholder': '06...' }
+                                }) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.dateOfBirth, {
+                                    label: 'Date de naissance',
+                                    attr: { 'class': 'form-control' }
+                                }) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form_row(registrationForm.plainPassword, {
+                                    label: 'Mot de passe',
+                                    attr: { 'class': 'form-control', 'placeholder': 'Choisissez un mot de passe robuste' }
+                                }) }}
+                            </div>
+
+                            <div class="form-check my-4">
+                                {{ form_widget(registrationForm.agreeTerms, {
+                                    attr: { 'class': 'form-check-input' }
+                                }) }}
+                                {{ form_label(registrationForm.agreeTerms, 'J\'accepte les conditions générales d\'utilisation', {
+                                    label_attr: { 'class': 'form-check-label ms-2' }
+                                }) }}
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+                                <i class="bi bi-person-plus-fill me-2"></i>Finaliser l'inscription
+                            </button>
+                        {{ form_end(registrationForm) }}
+                    </div>
+                    
+                    <div class="card-footer text-center py-3 bg-light">
+                        <small class="text-muted">Déjà un compte ? <a href="{{ path('app_login') }}" class="text-decoration-none">Connectez-vous</a></small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
