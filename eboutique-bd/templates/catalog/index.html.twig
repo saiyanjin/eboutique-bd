@@ -1,106 +1,106 @@
 {% extends 'base.html.twig' %}
 
-
 {% block title %}Catalogue de Bandes Dessinées{% endblock %}
 
-
 {% block body %}
+<style>
+    .product-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+    }
+    .img-container {
+        height: 350px;
+        overflow: hidden;
+        background-color: #f8f9fa;
+    }
+    .img-container img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+        transition: transform 0.5s ease;
+    }
+    .product-card:hover .img-container img {
+        transform: scale(1.05);
+    }
+    .category-btn {
+        border-radius: 20px;
+        padding: 8px 20px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+</style>
 
-<div class="container mt-4">
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="fw-bold">Notre Catalogue</h1>
+        <span class="text-muted">{{ products|length }} albums disponibles</span>
+    </div>
 
-    <h1 class="mb-4">Notre Catalogue</h1>
-
-
-
-    <div class="mb-4">
-
-        <div class="btn-group" role="group">
-
+    <div class="mb-5 text-center">
+        <div class="d-flex flex-wrap justify-content-center">
             <a href="{{ path('app_home') }}" 
-
-               class="btn btn-outline-primary {{ currentCategory is empty ? 'active' : '' }}">
-
+               class="btn category-btn {{ currentCategory is empty ? 'btn-primary' : 'btn-outline-primary' }}">
                Tous les genres
-
             </a>
 
-            
-
             {% for category in categories %}
-
                 <a href="{{ path('app_home', { category: category.id }) }}" 
-
-                   class="btn btn-outline-primary {{ currentCategory == category.id ? 'active' : '' }}">
-
+                   class="btn category-btn {{ currentCategory == category.id ? 'btn-primary' : 'btn-outline-primary' }}">
                     {{ category.name }}
-
                 </a>
-
             {% endfor %}
-
         </div>
-
     </div>
-
 
     <div class="row">
-
         {% for product in products %}
-
-
-            <div class="col-md-4 mb-4">
-
-                <div class="card h-100">
-
-                    {% if product.media is not empty %}
-
-                        <img src="{{ asset('uploads/' ~ product.media[0].path) }}" class="card-img-top" alt="{{ product.media[0].alt }}">
-
-                    {% else %}
-
-                        <img src="https://via.placeholder.com/200x300?text=Pas+d'image" class="card-img-top" alt="Image par défaut">
-
-                    {% endif %}
-
-                    <div class="card-body">
-
-                         <h5 class="card-title">{{ product.name }}</h5>
-
-                         <span class="badge bg-info text-dark mb-2">{{ product.category.name }}</span>
-
-                         <p class="card-text mt-2">
-                            <span class="h4 fw-bold">{{ (product.priceHT) | number_format(2, ',', ' ') }} €</span>
-                        </p>
-
+            <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
+                <div class="card h-100 shadow-sm product-card">
+                    <div class="position-absolute top-0 start-0 m-2 z-3">
+                        <span class="badge bg-white text-dark shadow-sm">{{ product.category.name }}</span>
                     </div>
 
-                    <div class="card-footer">
+                    <div class="img-container">
+                        {% if product.media is not empty %}
+                            <img src="{{ asset('uploads/' ~ product.media[0].path) }}" alt="{{ product.media[0].alt }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x450?text=Couverture+indisponible" alt="Image par défaut">
+                        {% endif %}
+                    </div>
 
+                    <div class="card-body d-flex flex-column text-center">
+                        <h5 class="card-title fw-bold mb-2 text-truncate" title="{{ product.name }}">
+                            {{ product.name }}
+                        </h5>
+                        
+                        <div class="mt-auto">
+                            <p class="text-primary fs-4 fw-bold mb-0">
+                                {{ (product.priceHT) | number_format(2, ',', ' ') }} €
+                            </p>
+                            <small class="text-muted">Prix unitaire</small>
+                        </div>
+                    </div>
 
-                        <a href="{{ path('app_cart_add', {id: product.id}) }}" class="btn btn-success w-100">
-
-                            Ajouter au panier
-
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="{{ path('app_cart_add', {id: product.id}) }}" class="btn btn-dark w-100 rounded-pill py-2 shadow-sm">
+                            <i class="bi bi-cart-plus me-2"></i>Ajouter au panier
                         </a>
-
                     </div>
-
                 </div>
-
             </div>
-
         {% else %}
-
-            <div class="col-12">
-
-                <p class="alert alert-info">Aucun produit trouvé dans cette catégorie.</p>
-
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-search display-1 text-muted"></i>
+                <p class="mt-3 fs-5">Aucune BD ne correspond à votre sélection.</p>
+                <a href="{{ path('app_home') }}" class="btn btn-link text-decoration-none">Voir tout le catalogue</a>
             </div>
-
         {% endfor %}
-
     </div>
-
 </div>
-
 {% endblock %}
