@@ -3,49 +3,112 @@
 {% block title %}Mon Panier{% endblock %}
 
 {% block body %}
-<h1>Votre Panier de BD</h1>
+<div class="container mt-5">
+    <h1 class="mb-5 fw-bold"><i class="bi bi-cart3 me-3"></i>Votre Panier</h1>
 
-{% if items | length > 0 %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Produit</th>
-                <th>Prix HT</th>
-                <th>Quantité</th>
-                <th>Total Ligne</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.product.priceHT }} €</td>
-                    <td>
-                        <a href="{{ path('app_cart_decrement', {id: item.product.id}) }}" class="btn btn-sm btn-secondary">-</a>
-                        {{ item.quantity }}
-                        <a href="{{ path('app_cart_add', {id: item.product.id}) }}" class="btn btn-sm btn-secondary">+</a>
-                    </td>
-                    <td>{{ item.product.priceHT * item.quantity }} €</td>
-                    <td>
-                        <a href="{{ path('app_cart_remove', {id: item.product.id}) }}" class="btn btn-danger">Supprimer</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                {# <td colspan="3" class="text-end"><strong>Total Général :</strong></td> #}
-                <td colspan="2"><strong>{{ total }} €</strong></td>
-            </tr>
-        </tfoot>
-    </table>
-    
-    <div class="mt-4">
-        <a href="{{ path('app_order_validate') }}" class="btn btn-success">Passer la commande</a>
-    </div>
-{% else %}
-    <p>Votre panier est vide.</p>
-    <a href="{{ path('app_home') }}" class="btn btn-primary">Retourner à la boutique</a>
-{% endif %}
+    {% if items | length > 0 %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 py-3">Produit</th>
+                                    <th class="text-center">Prix Unit.</th>
+                                    <th class="text-center">Quantité</th>
+                                    <th class="text-center">Total HT</th>
+                                    <th class="pe-4"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3" style="width: 60px;">
+                                                    {% if item.product.media is not empty %}
+                                                        <img src="{{ asset('uploads/' ~ item.product.media[0].path) }}" class="img-fluid rounded shadow-sm" alt="{{ item.product.name }}">
+                                                    {% else %}
+                                                        <img src="https://via.placeholder.com/60x80" class="img-fluid rounded" alt="No image">
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-dark">{{ item.product.name }}</h6>
+                                                    <small class="text-muted">{{ item.product.category.name }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center text-muted">
+                                            {{ item.product.priceHT | number_format(2, ',', ' ') }} €
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-inline-flex align-items-center bg-light rounded-pill p-1">
+                                                <a href="{{ path('app_cart_decrement', {id: item.product.id}) }}" class="btn btn-sm btn-white rounded-circle shadow-sm">-</a>
+                                                <span class="mx-3 fw-bold">{{ item.quantity }}</span>
+                                                <a href="{{ path('app_cart_add', {id: item.product.id}) }}" class="btn btn-sm btn-white rounded-circle shadow-sm">+</a>
+                                            </div>
+                                        </td>
+                                        <td class="text-center fw-bold">
+                                            {{ (item.product.priceHT * item.quantity) | number_format(2, ',', ' ') }} €
+                                        </td>
+                                        <td class="pe-4 text-end">
+                                            <a href="{{ path('app_cart_remove', {id: item.product.id}) }}" class="btn btn-outline-danger btn-sm border-0" title="Supprimer">
+                                                <i class="bi bi-trash3"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="{{ path('app_home') }}" class="btn btn-link text-decoration-none text-muted">
+                    <i class="bi bi-arrow-left"></i> Continuer mes achats
+                </a>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 bg-light p-3">
+                    <h5 class="fw-bold mb-4">Résumé de la commande</h5>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Hors Taxes</span>
+                        <span class="fw-bold">{{ total | number_format(2, ',', ' ') }} €</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>TVA (20%)</span>
+                        <span class="text-muted">{{ (total * 0.20) | number_format(2, ',', ' ') }} €</span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h5 fw-bold">Total TTC</span>
+                        <span class="h5 fw-bold text-primary">{{ (total * 1.20) | number_format(2, ',', ' ') }} €</span>
+                    </div>
+
+                    <a href="{{ path('app_order_validate') }}" class="btn btn-success btn-lg w-100 shadow-sm py-3">
+                        Passer la commande <i class="bi bi-chevron-right ms-2"></i>
+                    </a>
+                    
+                    <div class="mt-3 text-center">
+                        <i class="bi bi-shield-check text-success me-2"></i>
+                        <small class="text-muted">Paiement 100% sécurisé</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5 shadow-sm bg-light rounded">
+            <i class="bi bi-cart-x display-1 text-muted"></i>
+            <h2 class="mt-4">Votre panier est vide</h2>
+            <p class="text-muted mb-4">Il semblerait que vous n'ayez pas encore craqué pour une BD !</p>
+            <a href="{{ path('app_home') }}" class="btn btn-primary btn-lg rounded-pill px-5">
+                Retourner à la boutique
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
