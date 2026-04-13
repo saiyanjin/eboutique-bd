@@ -34,10 +34,10 @@ Voici le récapitulatif du projet.
 
 ## Stack Technique
 
-* **Framework** : Symfony 7
-* **Langage** : PHP 8.2+
+* **Framework** : Symfony 
+* **Langage** : PHP 8.2
 * **Base de données** : MySQL / MariaDB
-* **Interface Admin** : EasyAdmin 4
+* **Interface Admin** : EasyAdmin 
 * **Hébergement** : Alwaysdata
 
 ---
